@@ -2,6 +2,8 @@ from graphics import *
 import time
 import random
 
+speed = int(input())
+
 grav = 100
 drag = 1
 friction = 0.99
@@ -112,7 +114,7 @@ def bounce():
             ball.calcForces()
         for ball in balls:
             ball.step()
-        time.sleep(0.005)
+        time.sleep(0.005*speed)
     win.close()
 
 
@@ -134,7 +136,7 @@ def orbit():
             ball.calcForces()
         for ball in balls:
             ball.step()
-        time.sleep(0.008)
+        time.sleep(0.008*speed)
     win.close()
 
 
