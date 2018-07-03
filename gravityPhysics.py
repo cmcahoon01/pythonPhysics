@@ -1,6 +1,5 @@
 from graphics import *
 import time
-import random
 
 grav = 100
 drag = 1
