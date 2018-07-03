@@ -1,9 +1,10 @@
 from graphics import *
 import time
+import random
 
 grav = 100
 drag = 1
-friction = 0.95
+friction = 0.99
 
 
 class Ball(Circle):
@@ -14,7 +15,7 @@ class Ball(Circle):
         self.xSpeed = 0
         self.ySpeed = (250 - self.getCenter().getX()) * 4 / 100
         self.balls = bs
-        self.gravity = -0 * self.getRadius()
+        self.gravity = 0
 
     def changeSpeed(self, dx, dy):
         self.xSpeed += dx
@@ -61,7 +62,8 @@ class Ball(Circle):
                     if ball.getCenter().getX() > self.getCenter().getX():
                         xddt *= -1
                     xForce += xddt
-                    self.drag(friction)
+                    yForce += ball.ySpeed - self.ySpeed
+                    xForce += ball.xSpeed - self.xSpeed
 
         self.ySpeed += yForce / self.getRadius()
         self.xSpeed += xForce / self.getRadius()
@@ -83,9 +85,7 @@ def main():
     win = GraphWin("My Window", 500, 500)
     win.setBackground(color_rgb(255, 255, 255))
     balls = list()
-    # for i in range(20):
-    #     ran = (random.random()+1)*(win.getWidth()/2)
-    #     balls.append(Ball(Point(ran, ran), ran/10, win, balls))
+    random.seed(3)
     balls.append(Ball(Point(150, 250), 10, win, balls))
     balls.append(Ball(Point(250, 250), 50, win, balls))
     balls.append(Ball(Point(340, 250), 15, win, balls))
@@ -95,12 +95,12 @@ def main():
         ball.draw(win)
     for i in range(10000):
         for ball in balls:
-            if i % 800 == 0:
+            if i % 500 == 0:
                 ball.gravity *= -1
             ball.calcForces()
         for ball in balls:
             ball.step()
-        time.sleep(0.005)
+        time.sleep(0.008)
     win.close()
 
 

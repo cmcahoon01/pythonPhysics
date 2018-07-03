@@ -4,7 +4,7 @@ import random
 
 grav = 0
 drag = 0.99
-friction = 0.97
+friction = 0.95
 
 
 class Ball(Circle):
@@ -85,9 +85,9 @@ def main():
     win = GraphWin("My Window", 500, 500)
     win.setBackground(color_rgb(255, 255, 255))
     balls = list()
-    random.seed(92)
-    for i in range(20):
-        ran = (random.random() + 1) * (win.getWidth() / 2)
+    random.seed(3)
+    for i in range(15):
+        ran = (random.random() + 0.5) * (win.getWidth() / 1.5)
         balls.append(Ball(Point(ran, ran), ran / 10, win, balls))
     for ball in balls:
         ball.setFill(color_rgb(0, 0, 255))
