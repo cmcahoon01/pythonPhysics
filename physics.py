@@ -2,20 +2,22 @@ from graphics import *
 import time
 import random
 
-grav = 0
-drag = 0.99
-friction = 0.95
+grav = 100
+drag = 1
+friction = 0.99
+squish = 2
+fall = 0
+
 
 
 class Ball(Circle):
-
-    def __init__(self, pt, r, w, bs):
+    def __init__(self, pt, r, w, bs, yS=0, xS=0):
         Circle.__init__(self, pt, r)
         self.window = w
-        self.xSpeed = 0
-        self.ySpeed = (250 - self.getCenter().getX()) * 4 / 100
+        self.xSpeed = xS
+        self.ySpeed = yS
         self.balls = bs
-        self.gravity = -0.1 * self.getRadius()
+        self.gravity = fall * self.getRadius()
 
     def changeSpeed(self, dx, dy):
         self.xSpeed += dx
@@ -24,7 +26,7 @@ class Ball(Circle):
     def calcForces(self):
         yForce = self.gravity
         xForce = 0
-        squish = 5
+
         if self.getCenter().getY() + self.getRadius() > self.window.getHeight():
             yForce += (self.window.getHeight() - (self.getCenter().getY() + self.getRadius())) * squish
             self.drag(friction)
@@ -81,8 +83,18 @@ def distance(p1, p2):
     return ((p1.getX() - p2.getX()) ** 2 + (p1.getY() - p2.getY()) ** 2) ** (1 / 2)
 
 
-def main():
-    win = GraphWin("My Window", 500, 500)
+def bounce():
+    global grav
+    global drag
+    global friction
+    global squish
+    global fall
+    grav = 0
+    drag = 0.99
+    friction = 0.95
+    squish = 5
+    fall = -0.1
+    win = GraphWin("Bouncy", 500, 500)
     win.setBackground(color_rgb(255, 255, 255))
     balls = list()
     random.seed(3)
@@ -93,7 +105,7 @@ def main():
         ball.setFill(color_rgb(0, 0, 255))
         ball.setOutline(color_rgb(0, 0, 255))
         ball.draw(win)
-    for i in range(10000):
+    for i in range(2000):
         for ball in balls:
             if i % 500 == 0:
                 ball.gravity *= -1
@@ -104,4 +116,28 @@ def main():
     win.close()
 
 
-main()
+def orbit():
+    win = GraphWin("Orbit", 500, 500)
+    win.setBackground(color_rgb(255, 255, 255))
+    balls = list()
+    balls.append(Ball(Point(150, 250), 10, win, balls, 4, 0))
+    balls.append(Ball(Point(250, 250), 50, win, balls, 0, 0))
+    balls.append(Ball(Point(340, 250), 15, win, balls, -3.6, 0))
+    for ball in balls:
+        ball.setFill(color_rgb(0, 0, 255))
+        ball.setOutline(color_rgb(0, 0, 255))
+        ball.draw(win)
+    for i in range(1500):
+        for ball in balls:
+            if i % 500 == 0:
+                ball.gravity *= -1
+            ball.calcForces()
+        for ball in balls:
+            ball.step()
+        time.sleep(0.008)
+    win.close()
+
+
+orbit()
+bounce()
+
